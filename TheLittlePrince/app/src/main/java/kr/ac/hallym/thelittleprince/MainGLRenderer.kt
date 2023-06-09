@@ -9,6 +9,8 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+import kotlin.math.cos
+import kotlin.math.sin
 
 const val COORDS_PER_VERTEX = 3
 
@@ -19,6 +21,7 @@ var cameraVec = floatArrayOf(0.0f, -0.7071f, -0.7071f)
 class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
 
     private lateinit var mPyramid : MyPyramid
+    private lateinit var mCube : MyCube
 
     private var modelMatrix = FloatArray(16)
     private var viewMatrix = FloatArray(16)
@@ -42,6 +45,7 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
         Matrix.setIdentityM(vpMatrix, 0)
 
         mPyramid = MyPyramid(context)
+        mCube = MyCube(context)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -58,7 +62,10 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
-        mPyramid.draw(vpMatrix)
+        //mPyramid.draw(vpMatrix)
+
+
+        mCube.draw(vpMatrix)
     }
 
 }
@@ -85,5 +92,23 @@ fun loadShader(type: Int, filename: String, myContext: Context): Int {
             GLES30.glDeleteShader(shader)
             Log.e("Shader", "$type shader compile error.")
         }
+    }
+}
+
+fun cameraRotate(theta: Float) {
+    val sinTheta = sin(theta)
+    val cosTheta = cos(theta)
+    val newVecZ = cosTheta * cameraVec[2] - sinTheta * cameraVec[0]
+    val newVecX = sinTheta * cameraVec[2] + cosTheta * cameraVec[0]
+    cameraVec[0] = newVecX
+    cameraVec[2] = newVecZ
+}
+
+fun cameraMove(distance: Float) {
+    val newPosX = eyePos[0] + distance * cameraVec[0]
+    val newPosZ = eyePos[2] + distance * cameraVec[2]
+    if(newPosX > -10 && newPosX < 10 && newPosZ > -10 && newPosZ < 10) {
+        eyePos[0] = newPosX
+        eyePos[2] = newPosZ
     }
 }
