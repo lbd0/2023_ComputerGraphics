@@ -1,9 +1,11 @@
 package kr.ac.hallym.thelittleprince
 
+import android.content.Intent
 import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
+import androidx.core.content.ContextCompat
 import kr.ac.hallym.thelittleprince.databinding.ActivityMoonBinding
 
 var scaleFactor = 1f
@@ -38,6 +40,7 @@ class Moon : AppCompatActivity() {
             cameraMove(-0.5f)
             binding.surfaceView.requestRender()
         }
+
     }
 
     fun initSurfaceView() {

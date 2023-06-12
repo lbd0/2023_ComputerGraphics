@@ -88,10 +88,10 @@ class MyCube(val myContext: Context){
         GLES30.glUseProgram(mProgram)
 
         //
-        GLES30.glEnableVertexAttribArray(3)
+        GLES30.glEnableVertexAttribArray(2)
         //
         GLES30.glVertexAttribPointer(
-            3,
+            2,
             COORDS_PER_VERTEX,
             GLES30.GL_FLOAT,
             false,

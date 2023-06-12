@@ -2,8 +2,8 @@
 
 uniform mat4 uMVPMatrix;
 
-layout(location = 6) in vec4 vPosition;
-layout(location = 7) in vec2 vTexCoord;
+layout(location = 8) in vec4 vPosition;
+layout(location = 9) in vec2 vTexCoord;
 
 out vec2 fTexCoord;
 

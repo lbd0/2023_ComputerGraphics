@@ -102,9 +102,9 @@ class MyPillar(val myContext:Context) {
 
         GLES30.glUseProgram(mProgram)
 
-        GLES30.glEnableVertexAttribArray(12)
+        GLES30.glEnableVertexAttribArray(6)
         GLES30.glVertexAttribPointer(
-            12,
+            6,
             COORDS_PER_VERTEX,
             GLES30.GL_FLOAT,
             false,
@@ -112,9 +112,9 @@ class MyPillar(val myContext:Context) {
             vertexBuffer
         )
 
-        GLES30.glEnableVertexAttribArray(13)
+        GLES30.glEnableVertexAttribArray(7)
         GLES30.glVertexAttribPointer(
-            13,
+            7,
             2,
             GLES30.GL_FLOAT,
             false,

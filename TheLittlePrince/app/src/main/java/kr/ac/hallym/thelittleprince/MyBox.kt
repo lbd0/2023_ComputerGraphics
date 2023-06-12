@@ -39,17 +39,6 @@ class MyBox(val myContext:Context) {
         }
     }
 
-    private val vertexNormals = floatArrayOf(
-        -0.57735f,  0.57735f, -0.57735f,
-        -0.57735f, -0.57735f, -0.57735f,
-        0.57735f, -0.57735f, -0.57735f,
-        0.57735f,  0.57735f, -0.57735f,
-        -0.57735f,  0.57735f,  0.57735f,
-        -0.57735f, -0.57735f,  0.57735f,
-        0.57735f, -0.57735f,  0.57735f,
-        0.57735f,  0.57735f,  0.57735f
-    )
-
     private val vertexUVs = FloatArray(72).apply {
         val UVs = arrayOf(
             floatArrayOf(0.0f, 0.0f),
@@ -79,16 +68,6 @@ class MyBox(val myContext:Context) {
             }
         }
 
-    private var normalBuffer: FloatBuffer =
-        //
-        ByteBuffer.allocateDirect(vertexNormals.size * 4).run {
-            order(ByteOrder.nativeOrder())
-            asFloatBuffer().apply {
-                put(vertexNormals)
-                position(0)
-            }
-        }
-
     private var uvBuffer : FloatBuffer =
         ByteBuffer.allocateDirect(vertexUVs.size * 4).run {
             order(ByteOrder.nativeOrder())
@@ -100,22 +79,7 @@ class MyBox(val myContext:Context) {
 
     private var mProgram: Int = -1
 
-    private val matAmbient = floatArrayOf( 1.0f, 1.0f, 1.0f )
-    private val matSpecular = floatArrayOf( 1.0f, 1.0f, 1.0f )
-    private val matShineiess = 10.0f
-
-    private var mEyePosHandle = -1
-    private var mColorHandle: Int = -1
-    private var mLightDirHandle: Int = -1
-    private var mLightAmbiHandle: Int = -1
-    private var mLightDiffHandle: Int = -1
-    private var mLightSpecHandle: Int = -1
-    private var mMatAmbiHandle: Int = -1
-    private var mMatSpecHandle: Int = -1
-    private var mMatShiHandle: Int = -1
-
     private var mvpMatrixHandle: Int = -1
-    private var mWorldMatHandle = -1
 
     private var textureID = IntArray(1)
 
@@ -134,10 +98,10 @@ class MyBox(val myContext:Context) {
 
         GLES30.glUseProgram(mProgram)
 
-        GLES30.glEnableVertexAttribArray(9) // enable하고
+        GLES30.glEnableVertexAttribArray(4) // enable하고
 
         GLES30.glVertexAttribPointer( // 넣음
-            9,
+            4,
             COORDS_PER_VERTEX,
             GLES30.GL_FLOAT,
             false,
@@ -145,9 +109,9 @@ class MyBox(val myContext:Context) {
             vertexBuffer
         )
 
-        GLES30.glEnableVertexAttribArray(10)
+        GLES30.glEnableVertexAttribArray(5)
         GLES30.glVertexAttribPointer(
-            10,
+            5,
             2,
             GLES30.GL_FLOAT,
             false,
@@ -155,50 +119,8 @@ class MyBox(val myContext:Context) {
             uvBuffer
         )
 
-        GLES30.glEnableVertexAttribArray(11)
-        GLES30.glVertexAttribPointer(
-            11,
-            COORDS_PER_VERTEX,
-            GLES30.GL_FLOAT,
-            false,
-            vertexStride,
-            normalBuffer
-        )
-
-        mEyePosHandle = GLES30.glGetUniformLocation(mProgram, "eyePos").also {
-            GLES30.glUniform3fv(it, 1, eyePos, 0)
-        }
-        mLightDirHandle = GLES30.glGetUniformLocation(mProgram, "lightDir").also {
-            GLES30.glUniform3fv(it, 1, lightDir, 0)
-        }
-
-        mLightAmbiHandle = GLES30.glGetUniformLocation(mProgram, "lightAmbi").also {
-            GLES30.glUniform3fv(it, 1, lightAmbient, 0)
-        }
-
-        mLightDiffHandle = GLES30.glGetUniformLocation(mProgram, "lightDiff").also {
-            GLES30.glUniform3fv(it, 1, lightDiffuse, 0)
-        }
-
-        mLightSpecHandle = GLES30.glGetUniformLocation(mProgram, "lightSpec").also {
-            GLES30.glUniform3fv(it, 1, lightSpecular, 0)
-        }
-
-        mMatAmbiHandle = GLES30.glGetUniformLocation(mProgram, "matAmbi").also {
-            GLES30.glUniform3fv(it, 1, matAmbient, 0)
-        }
-
-        mMatSpecHandle = GLES30.glGetUniformLocation(mProgram, "matSpec").also {
-            GLES30.glUniform3fv(it, 1, matSpecular, 0)
-        }
-
-        mMatShiHandle = GLES30.glGetUniformLocation(mProgram, "matSh").also {
-            GLES30.glUniform1f(it, matShineiess)
-        }
-
         //
         mvpMatrixHandle = GLES30.glGetUniformLocation(mProgram, "uMVPMatrix")
-        mWorldMatHandle = GLES30.glGetUniformLocation(mProgram, "worldMat")
 
         GLES30.glGenTextures(1, textureID, 0)
 
@@ -209,11 +131,10 @@ class MyBox(val myContext:Context) {
         GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, loadBitmap("crate.bmp", myContext), 0)
     }
 
-    fun draw(mvpMatrix: FloatArray, worldMat: FloatArray) {
+    fun draw(mvpMatrix: FloatArray) {
         GLES30.glUseProgram(mProgram)
 
         GLES30.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0)
-        GLES30.glUniformMatrix4fv(mWorldMatHandle, 1, false, worldMat, 0)
 
         GLES30.glBindTexture(GLES20.GL_TEXTURE_2D, textureID[0])
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
