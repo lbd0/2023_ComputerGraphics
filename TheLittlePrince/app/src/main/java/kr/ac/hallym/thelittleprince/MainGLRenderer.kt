@@ -5,6 +5,7 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
+import android.view.MotionEvent
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
@@ -14,7 +15,7 @@ import kotlin.math.sin
 
 const val COORDS_PER_VERTEX = 3
 
-var eyePos = floatArrayOf(2.0f, 2.0f, 2.0f)
+var eyePos = floatArrayOf(0.0f, 0.0f, 0.0f)
 var eyeAt = floatArrayOf(0.0f, 0.0f, 0.0f)
 var cameraVec = floatArrayOf(0.0f, -0.7071f, -0.7071f)
 
@@ -22,6 +23,9 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
 
     private lateinit var mPyramid : MyPyramid
     private lateinit var mCube : MyCube
+    private lateinit var mMoonGround : MyMoonGround
+    private lateinit var mBox : MyBox
+
 
     private var modelMatrix = FloatArray(16)
     private var viewMatrix = FloatArray(16)
@@ -46,15 +50,19 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
 
         mPyramid = MyPyramid(context)
         mCube = MyCube(context)
+        mMoonGround = MyMoonGround(context)
+        mBox = MyBox(context)
+
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES30.glViewport(0, 0, width, height)
 
+
         val ratio = width.toFloat() / height.toFloat()
         Matrix.perspectiveM(projectionMatrix, 0, 90f, ratio, 0.001f, 1000f)
 
-        Matrix.setLookAtM(viewMatrix, 0, eyePos[0], eyePos[1], eyePos[2], 0f, 0f, 0f, 0f,1f ,0f)
+        Matrix.setLookAtM(viewMatrix, 0, 0.0f, 2.0f, 2.0f, 0f, 0f, 0f, 0f,1f ,0f)
 
         Matrix.multiplyMM(vpMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
     }
@@ -62,10 +70,30 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
-        //mPyramid.draw(vpMatrix)
+        // 큐브 위치 조정
+        var rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+        Matrix.rotateM(rotMatrix, 0, 45f, 0f, 0f, 1f)
 
+        Matrix.setIdentityM(modelMatrix, 0)
+        Matrix.translateM(modelMatrix, 0, 0f, 1f, 0f)
+        Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
+        Matrix.multiplyMM(mvpMatrix, 0, vpMatrix, 0, modelMatrix, 0)
+       // mCube.draw(mvpMatrix) // 어린왕자 머리
 
-        mCube.draw(vpMatrix)
+       // mPyramid.draw(vpMatrix)   // 어린왕자 몸
+
+       // mMoonGround.draw(vpMatrix)    // 바닥
+
+        // 박스 위치 조정
+        rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+        Matrix.rotateM(rotMatrix, 0, 45f, 0f, 1f, 0f)
+
+        Matrix.setIdentityM(modelMatrix, 0)
+        Matrix.translateM(modelMatrix, 0, -1f, 1f, 0f)
+        Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
+        Matrix.multiplyMM(mvpMatrix, 0, vpMatrix, 0, modelMatrix, 0)
+        mBox.draw(mvpMatrix)    // 행성 1
+
     }
 
 }
