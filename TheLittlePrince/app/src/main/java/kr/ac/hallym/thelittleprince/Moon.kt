@@ -22,41 +22,21 @@ class Moon : AppCompatActivity() {
         initSurfaceView()
         setContentView(binding.root)
 
-        val sinTheta = 0.17365f
-        val cosTheta = 0.98481f
         binding.eyeLeft.setOnClickListener {
-            var newVecZ = cosTheta * cameraVec[2] - sinTheta * cameraVec[0]
-            var newVecX = sinTheta * cameraVec[2] + cosTheta * cameraVec[0]
-            cameraVec[0] = newVecX
-            cameraVec[2] = newVecZ
+            cameraRotate(0.174f)
             binding.surfaceView.requestRender()
         }
         binding.eyeRight.setOnClickListener {
-            var newVecZ = cosTheta * cameraVec[2] + sinTheta * cameraVec[0]
-            var newVecX = -sinTheta * cameraVec[2] + cosTheta * cameraVec[0]
-            cameraVec[0] = newVecX
-            cameraVec[2] = newVecZ
+            cameraRotate(-0.174f)
             binding.surfaceView.requestRender()
         }
         binding.eyeForward.setOnClickListener {
-            /*var newPosX = eyePos[0] + 0.5f * cameraVec[0]
-            var newPosZ = eyePos[2] + 0.5f * cameraVec[2]
-            if(newPosX > -10 && newPosX < 10 && newPosZ > -10 && newPosZ < 10) {
-                eyePos[0] = newPosX
-                eyePos[2] = newPosZ
-                binding.surfaceView.requestRender()
-            }*/
-            scaleFactor *= 0.9f
+            cameraMove(0.5f)
+            binding.surfaceView.requestRender()
         }
         binding.eyeBackward.setOnClickListener {
-            /*var newPosX = eyePos[0] - 0.5f * cameraVec[0]
-            var newPosZ = eyePos[2] - 0.5f * cameraVec[2]
-            if(newPosX > -10 && newPosX < 10 && newPosZ > -10 && newPosZ < 10) {
-                eyePos[0] = newPosX
-                eyePos[2] = newPosZ
-                binding.surfaceView.requestRender()
-            }*/
-            scaleFactor *= 1.1f
+            cameraMove(-0.5f)
+            binding.surfaceView.requestRender()
         }
     }
 

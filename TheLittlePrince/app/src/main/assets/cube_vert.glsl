@@ -2,7 +2,7 @@
 
 uniform mat4 uMVPMatrix;
 
-layout(location = 1) in vec4 vPosition;
+layout(location = 3) in vec4 vPosition;
 
 void main() {
     gl_Position = uMVPMatrix * vPosition;

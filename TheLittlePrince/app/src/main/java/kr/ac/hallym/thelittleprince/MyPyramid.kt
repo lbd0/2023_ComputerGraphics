@@ -42,7 +42,7 @@ class MyPyramid(myContext: Context) {
             }
         }
 
-    private val color = floatArrayOf(0.0f, 1.0f, 0.0f, 1.0f)
+    private val color = floatArrayOf(0.0f, 0.75f, 0.0f, 1.0f)
 
     private var mProgram: Int = -1
 
@@ -55,8 +55,7 @@ class MyPyramid(myContext: Context) {
 
     init {
         val vertexShader: Int = loadShader(GLES30.GL_VERTEX_SHADER, "pyramid_vert.glsl", myContext)
-        val fragmentShader: Int =
-            loadShader(GLES30.GL_FRAGMENT_SHADER, "pyramid_frag.glsl", myContext)
+        val fragmentShader: Int = loadShader(GLES30.GL_FRAGMENT_SHADER, "pyramid_frag.glsl", myContext)
 
         mProgram = GLES30.glCreateProgram().also {
             GLES30.glAttachShader(it, vertexShader)
@@ -66,10 +65,10 @@ class MyPyramid(myContext: Context) {
 
         GLES30.glUseProgram(mProgram)
 
-        GLES30.glEnableVertexAttribArray(0)
+        GLES30.glEnableVertexAttribArray(6)
 
         GLES30.glVertexAttribPointer( // 넣음
-            0,
+            6,
             COORDS_PER_VERTEX,
             GLES30.GL_FLOAT,
             false,
