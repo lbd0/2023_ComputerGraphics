@@ -143,16 +143,6 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
 
 
 
-        val endTime = SystemClock.uptimeMillis()
-        val angle = 0.1f * (endTime - startTime).toFloat()
-        startTime = endTime
-        rotYAngle += angle
-        var rotYMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
-        Matrix.rotateM(rotYMatrix, 0 , rotYAngle, 0f, 1f, 0f)
-
-        rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
-        Matrix.rotateM(rotMatrix, 0, 45f, 0f, 0f, 1f)
-        Matrix.multiplyMM(rotMatrix, 0, rotYMatrix, 0, rotMatrix, 0)
 
         // 행성 위치 및 크기 조정
         scaleMatrix = floatArrayOf(
@@ -162,6 +152,8 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
             0f, 0f, 0f, 1f
         )
 
+        rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+        Matrix.rotateM(rotMatrix, 0, 165f, 0f, 1f, 0f)
         Matrix.setIdentityM(modelMatrix, 0)
         Matrix.translateM(modelMatrix, 0, -4.0f, 1.3f, 2.0f)
         Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
@@ -176,10 +168,11 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
             0f, 0f, 0.5f, 0f,
             0f, 0f, 0f, 1f
         )
+
         rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
         Matrix.rotateM(rotMatrix, 0, 100f, 0f, 1f, 0f)
         Matrix.setIdentityM(modelMatrix, 0)
-        Matrix.translateM(modelMatrix, 0, -3.0f, 1.3f, -0.5f)
+        Matrix.translateM(modelMatrix, 0, -3.0f, 1.0f, -0.5f)
         Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
         Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, scaleMatrix, 0)
         Matrix.multiplyMM(mvpMatrix, 0, vpMatrix, 0, modelMatrix, 0)
@@ -192,8 +185,10 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
             0f, 0f, 0.3f, 0f,
             0f, 0f, 0f, 1f
         )
+
         rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
-        Matrix.rotateM(rotMatrix, 0, 90f, 0f, 1f, 0f)
+        Matrix.rotateM(rotMatrix, 0, 90f, 0f, 0f, 1f)
+        Matrix.rotateM(rotMatrix, 0, 160f, 0f, 1f, 0f)
         Matrix.setIdentityM(modelMatrix, 0)
         Matrix.translateM(modelMatrix, 0, 1.5f, 1.3f, -1.0f)
         Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
@@ -202,14 +197,25 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
         mBoa.draw(mvpMatrix)    // 행성 3 - 보아뱀
 
 
+        val endTime = SystemClock.uptimeMillis()
+        val angle = 0.1f * (endTime - startTime).toFloat()
+        startTime = endTime
+        rotYAngle += angle
+        var rotYMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+        Matrix.rotateM(rotYMatrix, 0 , rotYAngle, 0f, 1f, 0f)
+
+        rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+        Matrix.rotateM(rotMatrix, 0, 45f, 0f, 0f, 1f)
+        Matrix.multiplyMM(rotMatrix, 0, rotYMatrix, 0, rotMatrix, 0)
+
+
         scaleMatrix = floatArrayOf(
             0.3f, 0f, 0f, 0f,
             0f, 0.3f, 0f, 0f,
             0f, 0f, 0.3f, 0f,
             0f, 0f, 0f, 1f
         )
-        rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
-        Matrix.rotateM(rotMatrix, 0, 90f, 0f, 1f, 0f)
+
         Matrix.setIdentityM(modelMatrix, 0)
         Matrix.translateM(modelMatrix, 0, 3.5f, 1.6f, 1.0f)
         Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotMatrix, 0)
@@ -225,6 +231,8 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
             cameraVec[1] = -0.7071f
             cameraVec[2] = -0.7071f
 
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
+
             rotMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
             Matrix.rotateM(rotMatrix, 0, 45f, 1f, 0f, 0f)
             Matrix.setIdentityM(modelMatrix, 0)
@@ -239,7 +247,6 @@ class MainGLRenderer (val context : Context) : GLSurfaceView.Renderer {
                 2 -> mBoaTxt.draw(mvpMatrix)
                 3 -> mBoxTxt.draw(mvpMatrix)
             }
-
         }
 
     }
